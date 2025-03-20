@@ -24,7 +24,27 @@ if archivo_pdf is not None:
     # Crear un nuevo PDF solo con esas páginas
     nuevo_doc = fitz.open()
     for i in paginas_seleccionadas:
+        # Copiar la página al nuevo documento
         nuevo_doc.insert_pdf(doc, from_page=i, to_page=i)
+
+    # Agregar marca de agua a todas las páginas del nuevo documento
+    for pagina in nuevo_doc:
+        rect = pagina.rect  # Dimensiones de la página
+        texto = "Documento al 20%"  # Texto de la marca de agua
+        tamaño_fuente = 40  # Tamaño de la fuente
+
+        posicion = fitz.Point(rect.width / 4, rect.height / 2)  # Posición central aproximada
+
+        # Dibujar el texto en la página
+        pagina.insert_text(
+            posicion,
+            texto,
+            fontsize=tamaño_fuente,
+            fontname="times-roman",
+            color=(0.85, 0.85, 0.85),  # Color gris
+            rotate=0,  # Rotación del texto
+            overlay=True
+        )
     
     # Guardar el nuevo archivo en memoria
     pdf_bytes = BytesIO()
