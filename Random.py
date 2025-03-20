@@ -2,10 +2,7 @@ import random
 import fitz
 import streamlit as st
 import os
-
-# Función para obtener la carpeta de descargas del usuario
-def obtener_carpeta_descargas():
-    return os.path.join(os.path.expanduser("~"), "Downloads")
+from io import BytesIO
 
 # Título de la aplicación
 st.title("Reductor de PDF")
@@ -19,7 +16,7 @@ if archivo_pdf is not None:
     
     # Calcular cuántas páginas dejar (20% del total)
     total_paginas = len(doc)
-    paginas_a_dejar = max(1, int(total_paginas * 0.2))  # Asegurar que sea al menos 1 página
+    paginas_a_dejar = max(1, int(total_paginas * 0.2))
     
     # Seleccionar aleatoriamente qué páginas conservar
     paginas_seleccionadas = sorted(random.sample(range(total_paginas), paginas_a_dejar))
@@ -29,13 +26,20 @@ if archivo_pdf is not None:
     for i in paginas_seleccionadas:
         nuevo_doc.insert_pdf(doc, from_page=i, to_page=i)
     
-    # Guardar el nuevo archivo en la carpeta de descargas
-    carpeta_descargas = obtener_carpeta_descargas()
-    nombre_archivo = os.path.splitext(archivo_pdf.name)[0]
-    ruta_guardado = os.path.join(carpeta_descargas, f"{nombre_archivo}_20%.pdf")
-    nuevo_doc.save(ruta_guardado)
+    # Guardar el nuevo archivo en memoria
+    pdf_bytes = BytesIO()
+    nuevo_doc.save(pdf_bytes)
     nuevo_doc.close()
+    pdf_bytes.seek(0)
     
-    # Mostrar mensaje de éxito y enlace de descarga
-    st.success(f"Archivo reducido guardado en: {ruta_guardado}")
-    st.write(f"[Descargar archivo reducido](file://{ruta_guardado})")
+    # Mostrar mensaje de éxito
+    st.success("Archivo reducido generado con éxito.")
+    
+    # Botón para descargar el archivo
+    nombre_archivo = os.path.splitext(archivo_pdf.name)[0]
+    st.download_button(
+        label="Descargar archivo reducido",
+        data=pdf_bytes,
+        file_name=f"{nombre_archivo}_20%.pdf",
+        mime="application/pdf"
+    )
