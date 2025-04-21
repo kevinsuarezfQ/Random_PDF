@@ -1,6 +1,6 @@
 # Reductor de PDF con Streamlit
 
-Esta aplicación permite reducir un archivo PDF al 20% de sus páginas seleccionadas aleatoriamente. El archivo reducido se guarda en la carpeta de descargas del usuario.
+Esta aplicación permite reducir un archivo PDF al 20% de sus páginas seleccionadas aleatoriamente. El archivo reducido se guarda con una marca de agua que indica que es un documento al 20%. Se usa en linea mediante Streamlit.
 
 ## Requisitos
 
@@ -8,9 +8,6 @@ Esta aplicación permite reducir un archivo PDF al 20% de sus páginas seleccion
 - Streamlit
 - PyMuPDF
 
-## Instalación
+## Uso de app
 
-1. Clona este repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/Random_PDF.git
-   cd Random_PDF
+Visitar https://randompdf.streamlit.app/
